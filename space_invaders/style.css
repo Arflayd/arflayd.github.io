@@ -3,7 +3,7 @@ body {
     margin: 0; 
     letter-spacing: 3px;
     text-align: center; 
-    background: url(img/bg.jpg); 
+    background: url(img/bg.png); 
     background-size: cover; 
     font-family: Atari; 
     color: #2a8ef7;
@@ -16,15 +16,6 @@ select, button{
     height: 30px;
     width: 100px;
     font-size: 14px;
-}
-
-#planc{
-    background: url(img/titlebg.png);
-    background-repeat: no-repeat;
-    width: 500px;
-    height: 150px;
-    margin: 0 auto;
-    padding: 1px; 
 }
 
 #score{
