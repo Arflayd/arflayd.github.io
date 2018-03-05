@@ -189,7 +189,7 @@ function enemyMove(){
     //move all enemies vertically by a small amount
     for(var i = 0; i < 30; i++)
         {
-            enemiesLoc[i].y += 0.03;
+            enemiesLoc[i].y += 0.05;
         }  
 }
 
