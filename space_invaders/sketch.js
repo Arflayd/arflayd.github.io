@@ -23,10 +23,10 @@ var canFire = true;
 var score = 0;
 
 function preload(){
-    playerImg = loadImage('player.png');
-    enemyImg[0] = loadImage('enemy3.png');
-    enemyImg[1] = loadImage('enemy1.png');
-    enemyImg[2] = loadImage('enemy2.png');
+    playerImg = loadImage('img/player.png');
+    enemyImg[0] = loadImage('img/enemy3.png');
+    enemyImg[1] = loadImage('img/enemy1.png');
+    enemyImg[2] = loadImage('img/enemy2.png');
 }
 
 function setup(){
@@ -92,7 +92,7 @@ function draw(){
     background('rgba(0,0,0,0.9)');
     if(enemiesAliveCount == 0)
         {
-            document.getElementById("punkt").innerHTML = "You've won!";
+            document.getElementById("score").innerHTML = "You've won!";
             noLoop();
         }
     
@@ -266,7 +266,7 @@ function enemyCollisionCheck()
             if(enemiesAlive[i] && projectileLoc.x < enemiesLoc[i].x + 40 && projectileLoc.x + projectileSize.x > enemiesLoc[i].x&& projectileLoc.y <= enemiesLoc[i].y)
                 {
                     score += 1;
-                    document.getElementById("punkt").innerHTML = "Score: "+score;
+                    document.getElementById("score").innerHTML = "Score: "+score;
                     enemiesAlive[i] = false;
                     projectileLoc.x = -projectileSize.x;
                     projectileLoc.y = -projectileSize.y;
@@ -285,7 +285,7 @@ function playerCollisionCheck()
             if(enemyProjectilesLoc[i].x < playerLoc.x + 40 && enemyProjectilesLoc[i].x + projectileSize.x > playerLoc.x && enemyProjectilesLoc[i].y >= playerLoc.y)
                 {
                     noLoop();
-                    document.getElementById("punkt").innerHTML = "You've lost!";
+                    document.getElementById("score").innerHTML = "You've lost!";
                 }
                 
                 
