@@ -48,6 +48,12 @@ function draw(){
     
     playerGunMovement();
     
+    enemyMovement();
+    
+    enemyGunMovement();
+    
+    enemyBulletMovement();
+    
     playerBulletMovement();
       
     reloading();
@@ -56,11 +62,33 @@ function draw(){
     fill('#d69f46');
     ellipse(playerLoc.x,playerLoc.y,playerSize,playerSize);
     
+    fill('#7c5412');
+    ellipse(enemyLoc.x,enemyLoc.y,playerSize,playerSize);
+    
     fill('#1c1c1c');
     for(var i = 0; i < maxBullets; i++)
         {
             ellipse(bulletLocs[i].x,bulletLocs[i].y,5,5);
         } 
+    
+}
+
+function enemyMovement(){
+    
+}
+    
+function enemyGunMovement(){
+    
+    push();
+    fill('#262626');
+    translate(300, 200);
+    var angle = atan2(playerLoc.y - 200, playerLoc.x - 300);
+    rotate(angle);  
+    rect(5, -2.5, 30, 5);
+    pop();
+}
+    
+function enemyBulletMovement(){
     
 }
 
