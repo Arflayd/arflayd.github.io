@@ -1,0 +1,37 @@
+body {
+    padding: 0; 
+    margin: 0; 
+    letter-spacing: 3px;
+    text-align: center; 
+    background: white; 
+    background-size: cover; 
+    font-family: Atari; 
+    color: #f7982a;
+} 
+
+select, button{
+    background: #002246;
+    color: white;
+    border: 2px solid #002a57;
+    height: 30px;
+    width: 100px;
+    font-size: 14px;
+}
+
+#score{
+    font-size: 18px; 
+    margin: 20px;
+}
+
+#credentials{
+    font-family: Helvetica; 
+    font-size: 14px; 
+    position: fixed; 
+    bottom: 10px; 
+    right: 10px;
+}
+
+@font-face {
+    font-family: 'Atari';
+    src: url('AtariBold.ttf');
+}
