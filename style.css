@@ -2,6 +2,7 @@ body{
     padding: 0;
     margin: 0;
     text-align: center;
+    font-family: 'Verdana';
     ;
 }
 
@@ -13,7 +14,7 @@ body{
     font-size: 14px;
     border: 2px solid #3eb5ff;
     border-radius: 10px;
-    margin-top: 100px;
+    margin-top: 10px;
     transition: background 0.3s;
     outline: none;
 }
