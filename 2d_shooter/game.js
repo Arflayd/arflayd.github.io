@@ -5,7 +5,14 @@ var playerSpeed = 3;
 var diagonalSpeed;
 
 //enemy
-var enemyLoc;
+var enemyCount = 3;
+var enemyLocs = [];
+var enemyBulletCooldowns = [];
+var enemyBulletLocs = [];
+var enemyBulletAngles = [];
+
+var spawnPoint;
+var spawnLoc;
 
 //bullets
 var bulletLocs = [];
@@ -25,7 +32,17 @@ function setup(){
     diagonalSpeed = sin(QUARTER_PI)*playerSpeed;
     
     //enemy setup
-    enemyLoc = createVector(300, 200);
+    spawnLoc = createVector(0,0);
+    for(var i = 0; i < enemyCount; i++)
+        {
+            randomizeSpawnPoint();
+            
+            enemyLocs[i] = createVector(spawnLoc.x, spawnLoc.y);
+            enemyBulletCooldowns[i] = 0;
+            enemyBulletLocs[i] = createVector(0,0);
+            enemyBulletAngles[i] = 0;
+        }
+        
     
     //bullet setup
     for(var i = 0; i < maxBullets; i++)
@@ -33,8 +50,7 @@ function setup(){
             bulletLocs[i] = createVector(0,0);
             bulletAngles[i] = 0;
             bulletActive[i] = false;
-        }
-    
+        }   
         
     strokeWeight(3);
 }
@@ -44,6 +60,13 @@ function draw(){
     clear();
     background('#497432');
     
+    for(var i = 0; i < enemyCount; i++)
+        {
+            if(enemyBulletCooldowns[i] > 0)
+                enemyBulletCooldowns[i] -= 0.016;
+        } 
+    
+    
     playerMovement();
     
     playerGunMovement();
@@ -52,18 +75,27 @@ function draw(){
     
     enemyGunMovement();
     
+    enemyShoot();
+    
     enemyBulletMovement();
     
     playerBulletMovement();
       
+    collisionCheck();
+    
     reloading();
     
     //drawing
     fill('#d69f46');
     ellipse(playerLoc.x,playerLoc.y,playerSize,playerSize);
     
+    //draw enemy
     fill('#7c5412');
-    ellipse(enemyLoc.x,enemyLoc.y,playerSize,playerSize);
+    for(var i = 0; i < enemyCount; i++)
+        {
+            ellipse(enemyLocs[i].x,enemyLocs[i].y,playerSize,playerSize);
+        } 
+    
     
     fill('#1c1c1c');
     for(var i = 0; i < maxBullets; i++)
@@ -71,24 +103,95 @@ function draw(){
             ellipse(bulletLocs[i].x,bulletLocs[i].y,5,5);
         } 
     
+    for(var i = 0; i < enemyCount; i++)
+        {
+            ellipse(enemyBulletLocs[i].x,enemyBulletLocs[i].y,5,5);
+        } 
+    
+}
+
+function collisionCheck(){
+    
+    //player hits enemy
+    for(var i = 0; i < maxBullets;  i++)
+        {
+            for(var j = 0; j < enemyCount; j++)
+                {
+                    if(dist(bulletLocs[i].x, bulletLocs[i].y, enemyLocs[j].x, enemyLocs[j].y) < playerSize/2)
+                    {
+                        bulletActive[i] = false;
+                        bulletLocs[i].set(-5,-5);
+                        
+                        randomizeSpawnPoint();
+            
+                        enemyLocs[j].set(spawnLoc.x, spawnLoc.y);
+                    } 
+                }    
+        }
+    
+    //enemy hits player
+    for(var i = 0; i < enemyCount; i++)
+        {
+             if(dist(enemyBulletLocs[i].x, enemyBulletLocs[i].y, playerLoc.x, playerLoc.y) < playerSize/2)
+              {
+                        alert("hit!");
+             } 
+        }   
+        
 }
 
 function enemyMovement(){
+
+    for(var i = 0; i < enemyCount; i++)
+        {
+            if(dist(enemyLocs[i].x, enemyLocs[i].y, playerLoc.x, playerLoc.y) > 200)
+                enemyLocs[i] = p5.Vector.lerp(enemyLocs[i], playerLoc, 0.002);
+        }
     
 }
     
 function enemyGunMovement(){
     
-    push();
-    fill('#262626');
-    translate(300, 200);
-    var angle = atan2(playerLoc.y - 200, playerLoc.x - 300);
-    rotate(angle);  
-    rect(5, -2.5, 30, 5);
-    pop();
+    for(var i = 0; i < enemyCount; i++)
+        {
+            push();
+            fill('#262626');
+            translate(enemyLocs[i].x, enemyLocs[i].y);
+            var angle = atan2(playerLoc.y - enemyLocs[i].y, playerLoc.x - enemyLocs[i].x);
+            rotate(angle);  
+            rect(5, -2.5, 30, 5);
+            pop();
+        }
+    
+}
+
+function enemyShoot(){
+    
+    for(var i = 0; i < enemyCount; i++)
+        {
+            //not reloading
+            if(enemyBulletCooldowns[i] <= 0)
+            {   
+                enemyBulletCooldowns[i] = Math.random()*1+1.5;
+
+                //move the bullet to the player, offset it to match the gun's barrel, make it active
+                enemyBulletLocs[i] = enemyLocs[i].copy();
+
+                enemyBulletAngles[i] = atan2(playerLoc.y - enemyLocs[i].y, playerLoc.x - enemyLocs[i].x);
+                enemyBulletLocs[i].x += cos(enemyBulletAngles[i]) * 35;
+                enemyBulletLocs[i].y += sin(enemyBulletAngles[i]) * 35;
+            }
+        }
+    
 }
     
 function enemyBulletMovement(){
+    
+    for(var i = 0; i < enemyCount; i++)
+        {
+            enemyBulletLocs[i].x += cos(enemyBulletAngles[i]) * bulletSpeed;
+            enemyBulletLocs[i].y += sin(enemyBulletAngles[i]) * bulletSpeed;
+        }
     
 }
 
@@ -185,6 +288,20 @@ function reloading(){
         cooldown -= 0.016;
     else
         document.getElementById("bullets").innerHTML = "Bullets: "+Math.abs(bulletIndex-5);
+}
+
+function randomizeSpawnPoint(){
+    
+    var spawnPoint = Math.round(Math.random()*4);
+            
+            if(spawnPoint == 0)
+                spawnLoc.set(Math.random()*width, 0);
+            else if(spawnPoint == 1)
+                spawnLoc.set(Math.random()*width, height);
+            else if(spawnPoint == 2)
+                spawnLoc.set(0, Math.random()*height);
+            else
+                spawnLoc.set(width, Math.random()*height);
 }
 
 //shooting on LMB
