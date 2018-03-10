@@ -325,6 +325,15 @@ function playerMovement()
         playerLoc.x-=playerSpeed;
     else if(keyIsDown(68))
         playerLoc.x+=playerSpeed;
+    
+    if(playerLoc.x < 0 + playerSize/2)
+        playerLoc.x = 0 + playerSize/2;
+    if(playerLoc.x > width - playerSize/2)
+        playerLoc.x = width - playerSize/2;
+    if(playerLoc.y < 0 + playerSize/2)
+        playerLoc.y = 0 + playerSize/2;
+    if(playerLoc.y > height - playerSize/2 )
+        playerLoc.y = height - playerSize/2;
 }
 
 //move the gun with the player, make it point at the cursor
