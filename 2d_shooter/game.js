@@ -3,8 +3,11 @@ var playerLoc;
 var playerSize = 40;
 var playerSpeed = 3;
 var diagonalSpeed;
+var immunity = 0;
+var health = 5;
 
 //enemy
+var maxEnemies = 10;
 var enemyCount = 3;
 var enemyLocs = [];
 var enemyBulletCooldowns = [];
@@ -23,6 +26,8 @@ var bulletIndex = 0;
 var bulletActive = [];
 var cooldown = 0;
 
+var score =  0;
+
 function setup(){
     
     createCanvas(1000,600);
@@ -33,7 +38,7 @@ function setup(){
     
     //enemy setup
     spawnLoc = createVector(0,0);
-    for(var i = 0; i < enemyCount; i++)
+    for(var i = 0; i < maxEnemies; i++)
         {
             randomizeSpawnPoint();
             
@@ -47,7 +52,7 @@ function setup(){
     //bullet setup
     for(var i = 0; i < maxBullets; i++)
         {
-            bulletLocs[i] = createVector(0,0);
+            bulletLocs[i] = createVector(-5,-5);
             bulletAngles[i] = 0;
             bulletActive[i] = false;
         }   
@@ -65,6 +70,9 @@ function draw(){
             if(enemyBulletCooldowns[i] > 0)
                 enemyBulletCooldowns[i] -= 0.016;
         } 
+    
+    if(immunity > 0)
+        immunity -= 0.016;
     
     
     playerMovement();
@@ -86,7 +94,10 @@ function draw(){
     reloading();
     
     //drawing
-    fill('#d69f46');
+    if(immunity <= 0)
+        fill('#d69f46');
+    else
+        fill('#a2001f');
     ellipse(playerLoc.x,playerLoc.y,playerSize,playerSize);
     
     //draw enemy
@@ -96,17 +107,25 @@ function draw(){
             ellipse(enemyLocs[i].x,enemyLocs[i].y,playerSize,playerSize);
         } 
     
-    
+    //bullets
     fill('#1c1c1c');
     for(var i = 0; i < maxBullets; i++)
         {
             ellipse(bulletLocs[i].x,bulletLocs[i].y,5,5);
         } 
     
+    //enemy bullets
     for(var i = 0; i < enemyCount; i++)
         {
             ellipse(enemyBulletLocs[i].x,enemyBulletLocs[i].y,5,5);
         } 
+    
+    //player  healthbar
+    fill(0);
+    rect(playerLoc.x - playerSize/2, playerLoc.y + 25, playerSize, 7);
+    fill('#a2001f');
+    rect(playerLoc.x - playerSize/2, (playerLoc.y + 25), (playerSize / 5) * health, 7);
+    
     
 }
 
@@ -125,6 +144,12 @@ function collisionCheck(){
                         randomizeSpawnPoint();
             
                         enemyLocs[j].set(spawnLoc.x, spawnLoc.y);
+                        
+                        score++;
+                        document.getElementById("score").innerHTML = "Score: "+score;
+                        
+                        //increasing difficulty
+                        enemyCount = Math.floor(score/10) + 3;
                     } 
                 }    
         }
@@ -132,9 +157,12 @@ function collisionCheck(){
     //enemy hits player
     for(var i = 0; i < enemyCount; i++)
         {
-             if(dist(enemyBulletLocs[i].x, enemyBulletLocs[i].y, playerLoc.x, playerLoc.y) < playerSize/2)
+             if(dist(enemyBulletLocs[i].x, enemyBulletLocs[i].y, playerLoc.x, playerLoc.y) < playerSize/2 && immunity <= 0)
               {
-                        alert("hit!");
+                    immunity = 0.1;
+                    health--;
+                    if(health <= 0)
+                        alert("nigga you dead!");
              } 
         }   
         
