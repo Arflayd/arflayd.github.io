@@ -48,9 +48,9 @@ function setup(){
             randomizeSpawnPoint();
             
             enemyLocs[i] = createVector(spawnLoc.x, spawnLoc.y);
-            enemyBulletCooldowns[i] = 0;
+            enemyBulletCooldowns[i] = 1;
             enemyBulletLocs[i] = createVector(0,0);
-            enemyBulletAngles[i] = 0;
+            enemyBulletAngles[i] = 90;
             enemyHealth[i] = enemyMaxHealth;
         }
         
@@ -64,6 +64,7 @@ function setup(){
         }   
         
     strokeWeight(3);
+    textSize(24);
 }
 
 function draw(){
@@ -105,6 +106,10 @@ function draw(){
     else
         fill('#a2001f');
     ellipse(playerLoc.x,playerLoc.y,playerSize,playerSize);
+    
+    fill('rgba(0,0,0,0.8)');
+    if(cooldown <= 0)
+        text(5-bulletIndex, playerLoc.x-7, playerLoc.y+8);
     
     //draw enemy
     fill('#7c5412');
@@ -188,8 +193,8 @@ function collisionCheck(){
                     health--;
                     if(health <= 0)
                         {
-                            alert("nigga you dead!");
-                            location.reload();
+                            noLoop();
+                            document.getElementById("score").innerHTML = "You've lost! Score: "+score;
                         }
                         
              } 
@@ -264,7 +269,6 @@ function playerShoot()
                 {
                     bulletIndex = 0;
                     cooldown = 1;
-                    document.getElementById("bullets").innerHTML = "reloading";
                 }
                  
             //move the bullet to the player, offset it to match the gun's barrel, make it active
@@ -352,8 +356,6 @@ function playerGunMovement()
 function reloading(){
     if(cooldown > 0)
         cooldown -= 0.016;
-    else
-        document.getElementById("bullets").innerHTML = "Bullets: "+Math.abs(bulletIndex-5);
 }
 
 function randomizeSpawnPoint(){
