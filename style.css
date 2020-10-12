@@ -3,27 +3,28 @@ body{
     margin: 0;
     text-align: center;
     font-family: 'Verdana';
+    background: #f3f3f3
     ;
 }
 
 header{
     background: #242424;
     color: white;
-    font-size: 64px;
+    font-size: 80px;
+    line-height: 180px;
     text-align: center;
     height: 200px;
 }
 
 .game_button{
-    width: 200px;
-    height: 40px;
+    width: 250px;
+    height: 60px;
     color: #242424;
-    background: #c4c4c4;
     font-family: 'Verdana';
-    font-size: 14px;
-    border: 3px solid #242424;
-    border-radius: 3px;
-    margin-top: 10px;
+    font-size: 20px;
+    border: 2px solid #242424;
+    border-radius: 2px;
+    margin-top: 15px;
     transition: background 0.1s;
     outline: none;
 }
@@ -32,3 +33,4 @@ header{
     color: #c4c4c4;
     background: #303030;
 }
+
